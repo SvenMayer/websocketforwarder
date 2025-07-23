@@ -15,4 +15,4 @@ COPY app.py .
 # Expose the WebSocket port
 EXPOSE 10000
 
-CMD ["python", "app.py"]
+CMD ["python3", "app.py"]
