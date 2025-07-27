@@ -40,7 +40,10 @@ async def main():
     try:
         async with websockets.serve(handler, "0.0.0.0", 10000):
             print("Server started on ws://0.0.0.0:10000")
-            await asyncio.Future()  # run forever
+            try:
+                await asyncio.Future()  # run forever
+            except Exception as ex:
+                print("inner loop" + ex.args[0])
     except Exception as ex:
         print(ex.args[0])
 
