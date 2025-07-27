@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import asyncio
 import websockets
+import websockets.asyncio
+import websockets.asyncio.server
+import websockets.http11
 
 connected_clients = []
 
@@ -8,6 +11,22 @@ USAGE_LIMIT = 4 * 60 * 60 * 17 * 100
 
 class UsageLimitException(Exception):
     pass
+
+
+async def handler_request(connection, request):
+    print("handler")
+    if request.path == "/health":
+        return connection.respond(HTTPStatus.OK, "OK\n")
+
+    if request.headers.get("Upgrade") is None:
+        return connection.respond(
+            HTTPStatus.BAD_REQUEST, "Missing websocket Upgrade header\n"
+        )
+
+#    if request.headers.get("User-Agent", "").startswith("RadioPad/"):
+#        setattr(connection, "is_radio_pad", True)
+
+    return None
 
 
 async def handler(websocket, path=None):
@@ -38,14 +57,14 @@ async def handler(websocket, path=None):
 
 async def main():
     try:
-        async with websockets.serve(handler, "0.0.0.0", 10000):
+        async with websockets.serve(handler, "0.0.0.0", 10000, process_request=handler_request):
             print("Server started on ws://0.0.0.0:10000")
             try:
-                await asyncio.Future()  # run forever
-            except Exception as ex:
-                print("inner loop" + ex.args[0])
-    except Exception as ex:
-        print(ex.args[0])
+                await asyncio.Future()  # run ,
+            except:
+                print("inner loop")
+    except:
+        print("outer loop")
 
 
 if __name__ == "__main__":
