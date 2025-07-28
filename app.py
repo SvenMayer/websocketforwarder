@@ -56,15 +56,9 @@ async def handler(websocket, path=None):
 
 
 async def main():
-    try:
-        async with websockets.serve(handler, "0.0.0.0", 10000, process_request=handler_request):
-            print("Server started on ws://0.0.0.0:10000")
-            try:
-                await asyncio.Future()  # run ,
-            except:
-                print("inner loop")
-    except:
-        print("outer loop")
+    async with websockets.serve(handler, "0.0.0.0", 10000, process_request=handler_request):
+        print("Server started on ws://0.0.0.0:10000")
+        await asyncio.Future()  # run ,
 
 
 if __name__ == "__main__":
